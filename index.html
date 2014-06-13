@@ -21,7 +21,7 @@
     <div class="button {{selectedTab == tab ? 'selected' : ''}}" ng-repeat="tab in tabs" ng-click="switchTab(tab)">{{tab}}</div>
 </div>
 <div ng-hide="selectedTab == 'Statistics'">
-    <div class="item" ng-repeat="obj in display">
+    <div class="item" ng-repeat="obj in display | orderBy:'index':true">
         <div class="heading">{{obj.name}}</div>
         <div class="own" ng-show="obj.bc">{{obj.own}}</div>
         <div class="buysell" ng-show="obj.bc">

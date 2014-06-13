@@ -16,19 +16,19 @@
 			"Medical Staff": [
 				{
 					name: "Nurse",
-					desc: "Someone has to do all the work, and it sure isn't going to be you",
+					desc: "Someone has to do all the work, and it sure isn't going to be you!",
 					bc: 50,
 					i: 0.5
 				},
 				{
 					name: "Resident Doctor",
-					desc: "Fresh out of university and will do anything for a job",
+					desc: "Fresh out of university and will do anything for a job.",
 					bc: 250,
 					i: 5
 				},
 				{
 					name: "General Practitioner (GP)",
-					desc: "Doesn't specialize in any field, but fails in all",
+					desc: "Doesn't specialize in any field, but fails equally in all.",
 					bc: 1000,
 					i: 20
 				}
@@ -58,6 +58,7 @@
 			chanceLawsuit: 0,
 			earned: 0,
 			spent: 0,
+			sold: 0,
 			"Medical Staff": {0:0},
 			"Other Staff": {0:0},
 			Upgrades: {0:0},
@@ -73,9 +74,10 @@
 					var obj = tabData[i];
 					if (obj.bc) {
 						obj.buyPrice = Math.round(obj.bc + ((obj.bc * 0.4) * count) | 0);
-						obj.sellPrice = Math.round(obj.buyPrice * 0.6);
+						obj.sellPrice = Math.round((obj.bc * 0.4) * count);
 					}
 					obj.own = count;
+					obj.index = i;
 					$scope.display.push(obj);
 				}
 			}
@@ -179,7 +181,19 @@
 		};
 
 		$scope.sellObject = function(obj) {
-
+			var index = getObjectIndex(obj);
+			if (index != -1) {
+				var count = $scope.game[$scope.selectedTab][index];
+				if (count > 0) {
+					var origObj = $scope.data[$scope.selectedTab][index];
+					var sellPrice = Math.round((origObj.bc * 0.4) * count);
+					$scope.game[$scope.selectedTab][index] -= 1;
+					$scope.game.money += sellPrice;
+					$scope.game.sold += sellPrice;
+					checkAchievements();
+					buildDisplay();
+				}
+			}
 		};
 
 		buildDisplay();
